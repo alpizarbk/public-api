@@ -4,7 +4,7 @@ trigger:
 resources:
   - repo: self
 
-variables:
+variables: <---------------------- AGREGA LAS VARIABLES
   - group: "CICD"
   - name: app_var
     value: $[variables.appVariable]
@@ -20,29 +20,17 @@ stages:
     jobs:
       - job: Build
         displayName: Build
-        pool: test
+        pool: local-agent
 
         steps:
           - script: |
               echo "var=$(app_var)"
-              echo "tag= ${{ parameters.tag }}"
 
           - task: Docker@2
             displayName: Build an image
             inputs:
+              repository: ${{ parameters.imageName }}  <---------------------- AGREGA LAS VARIABLES
               command: build
-              containerRegistry: 'registryConnection' <------------------------------ repository service connection
-              repository: ${{ parameters.imageName }}
               dockerfile: "**/qa.dockerfile"
-              tags: |
-                ${{ parameters.tag }}
-              arguments: '--build-arg APP_ENV=$(app_var)'
-
-          - task: Docker@2 <------------------------------ push task
-            displayName: 'Push Docker Image'®
-            inputs:
-              command: 'push'
-              containerRegistry: 'registryConnection'
-              repository: ${{ parameters.imageName }}
-              tags: |
-                ${{ parameters.tag }}
+              tags: ${{ parameters.tag }} <---------------------- AGREGA LAS VARIABLES
+              arguments: '--build-arg APP_ENV="$(app_var)"'
