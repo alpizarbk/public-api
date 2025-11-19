@@ -4,7 +4,7 @@ trigger:
 resources:
   - repo: self
 
-variables:
+variables: <---------------------- AGREGA LAS VARIABLES
   - group: "CICD"
   - name: app_var
     value: $[variables.appVariable]
@@ -29,8 +29,8 @@ stages:
           - task: Docker@2
             displayName: Build an image
             inputs:
-              repository: ${{ parameters.imageName }}
+              repository: ${{ parameters.imageName }}  <---------------------- AGREGA LAS VARIABLES
               command: build
               dockerfile: "**/qa.dockerfile"
-              tags: ${{ parameters.tag }}
+              tags: ${{ parameters.tag }} <---------------------- AGREGA LAS VARIABLES
               arguments: '--build-arg APP_ENV="$(app_var)"'
