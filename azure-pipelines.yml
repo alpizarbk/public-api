@@ -56,7 +56,10 @@ stages:
         dependsOn: Build
         pool: local-agent
         steps:
-          - script: echo "Deploying..."
+          - script: | 
+                echo "Deploying..." 
+                echo "var=$(app_username)"
+                echo "var=$(app_password)"
           - task: AzureContainerApps@1
 
             inputs:
