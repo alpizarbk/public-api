@@ -8,6 +8,10 @@ variables:
   - group: "CICD"
   - name: app_var
     value: $[variables.appVariable]
+  - name: app_username
+    value: $[variables.acrUsername]
+  - name: app_password
+    value: $[variables.acrPassword]
 parameters:
   - name: tag
     default: "$(Build.BuildId)"
@@ -53,3 +57,14 @@ stages:
         pool: local-agent
         steps:
           - script: echo "Deploying..."
+          - task: AzureContainerApps@1
+
+            inputs:
+              azureSubscription: 'appDeployConnection'
+              imageToDeploy: karla.azurecr.io/${{ parameters.imageName }}:$(Build.BuildId)
+
+              containerAppName: 'app-public-api-karla' # NOMBRE DEL CONTAINER APP
+              resourceGroup: CURSO
+
+              acrUsername: $(app_username)
+              acrPassword: $(app_password)
