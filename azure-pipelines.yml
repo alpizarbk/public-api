@@ -1,5 +1,5 @@
 trigger:
-  - mains
+  - main
 
 resources:
   - repo: self
